@@ -88,10 +88,6 @@ proto.tick = function(dt) {
     this.jumping = false
   }
   this.jump_timer = at_rest ? this.jump_max_timer : this.jump_timer 
-
-  document.querySelector('.debug').innerText = 
-    target.acceleration.y.toFixed(2) + 'a; ' + target.velocity.y.toFixed(2) + 'v; '+
-    this.jump_timer + '; '
 }
 
 proto.acceleration = function(current, max) {
