@@ -1,0 +1,21 @@
+{
+  "name": "voxel-control",
+  "version": "0.0.0",
+  "description": "manipulate voxel-physical objects in a fps-style fashion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chrisdickinson/voxel-control.git"
+  },
+  "keywords": [
+    "voxeljs",
+    "controls"
+  ],
+  "author": "Chris Dickinson <chris@neversaw.us>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "3f4f8cb5997f1d32af15a8d03ea716157c0b5b65"
+}
