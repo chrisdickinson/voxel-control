@@ -1,12 +1,14 @@
 module.exports = control
 
-function control(control_state, target, opts) {
-  return new Control(control_state, target, opts)
+
+function control(control_state, mount, target, opts) {
+  return new Control(control_state, mount, target, opts)
 }
 
-function Control(state, target, opts) {
+function Control(state, mount, target, opts) {
   this.state = state
   this._target = target
+  this._mount = mount
   this.speed = opts.speed || 0.08
   this.max_speed = opts.maxSpeed || 0.28 
   this.jump_max_speed = opts.jumpMaxSpeed || 0.4 
@@ -14,6 +16,12 @@ function Control(state, target, opts) {
   this.jump_speed = opts.jumpSpeed || 0.1 
   this.jump_timer = this.jump_timer_max
   this.jumping = false
+
+  this.fire_rate = opts.fireRate || 0
+  this.needs_discrete_fire = opts.discreteFire || false
+  this.onadd = opts.onadd || this.onadd
+  this.onremove = opts.onremove || this.onremove
+  this.firing = 0
 
   this.air_control = 'airControl' in opts ? opts.airControl : true
 
@@ -29,6 +37,7 @@ var max = Math.max
   , min = Math.min
   , sin = Math.sin
   , abs = Math.abs
+  , floor = Math.floor
   , π = Math.PI
 
 proto.tick = function(dt) {
@@ -54,7 +63,6 @@ proto.tick = function(dt) {
   } else {
     this.z_accel_timer = this.accel_max_timer
 
-    target.velocity.z = at_rest || this.air_control ? 0 : target.velocity.z
   }
  
 
@@ -70,7 +78,6 @@ proto.tick = function(dt) {
       target.velocity.x = min(max(-this.max_speed, -speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
   } else {
     this.x_accel_timer = this.accel_max_timer
-    target.velocity.x = at_rest || this.air_control ? 0 : target.velocity.x
   }
 
   if(state.jump) {
@@ -83,11 +90,27 @@ proto.tick = function(dt) {
       }
       this.jump_timer = max(this.jump_timer - dt, 0)
     }
-
   } else {
     this.jumping = false
   }
-  this.jump_timer = at_rest ? this.jump_max_timer : this.jump_timer 
+  this.jump_timer = at_rest ? this.jump_max_timer : this.jump_timer
+
+
+  var can_fire = true
+
+  if(state.add || state.remove) {
+
+    if(this.firing && this.needs_discrete_fire) {
+      return this.firing += dt
+    }
+
+    if(!this.fire_rate || floor(this.firing / this.fire_rate) !== floor((this.firing + dt) / this.fire_rate)) {
+      (state.add ? this.onadd : this.onremove)(this._mount) 
+    }
+    this.firing += dt
+  } else {
+    this.firing = 0
+  }
 }
 
 proto.acceleration = function(current, max) {
@@ -101,4 +124,19 @@ proto.target = function(target) {
     this._target = target
   }
   return this._target
+}
+
+proto.mount = function(mount) {
+  if(mount) {
+    this._mount = mount
+  }
+  return this._mount
+}
+
+proto.onadd = function(_) {
+
+}
+
+proto.onremove = function(_) {
+
 }
