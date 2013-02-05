@@ -6,6 +6,8 @@ function control(control_state, mount, target, opts) {
 }
 
 function Control(state, mount, target, opts) {
+  opts = opts || {}
+
   this.state = state
   this._target = target
   this._mount = mount
@@ -16,6 +18,7 @@ function Control(state, mount, target, opts) {
   this.jump_speed = opts.jumpSpeed || 0.1 
   this.jump_timer = this.jump_timer_max
   this.jumping = false
+  this.acceleration = opts.accelerationCurve || this.acceleration
 
   this.fire_rate = opts.fireRate || 0
   this.needs_discrete_fire = opts.discreteFire || false
