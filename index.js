@@ -19,8 +19,7 @@ function Control(state, mount, target, opts) {
 
   this.fire_rate = opts.fireRate || 0
   this.needs_discrete_fire = opts.discreteFire || false
-  this.onadd = opts.onadd || this.onadd
-  this.onremove = opts.onremove || this.onremove
+  this.onfire = opts.onfire || this.onfire
   this.firing = 0
 
   this.air_control = 'airControl' in opts ? opts.airControl : true
@@ -83,6 +82,9 @@ proto.tick = function(dt) {
   if(state.jump) {
     if(!this.jumping && !at_rest) {
       // we're falling, we can't jump
+    } else if(at_rest > 0) {
+      // we hit our head
+      this.jumping = false
     } else {
       this.jumping = true
       if(this.jump_timer > 0) {
@@ -93,19 +95,18 @@ proto.tick = function(dt) {
   } else {
     this.jumping = false
   }
-  this.jump_timer = at_rest ? this.jump_max_timer : this.jump_timer
+  this.jump_timer = at_rest < 0 ? this.jump_max_timer : this.jump_timer
 
 
   var can_fire = true
 
-  if(state.add || state.remove) {
-
+  if(state.fire || state.firealt) {
     if(this.firing && this.needs_discrete_fire) {
       return this.firing += dt
     }
 
     if(!this.fire_rate || floor(this.firing / this.fire_rate) !== floor((this.firing + dt) / this.fire_rate)) {
-      (state.add ? this.onadd : this.onremove)(this._mount) 
+      this.onfire(this._mount, state)
     }
     this.firing += dt
   } else {
@@ -133,10 +134,6 @@ proto.mount = function(mount) {
   return this._mount
 }
 
-proto.onadd = function(_) {
-
-}
-
-proto.onremove = function(_) {
+proto.onfire = function(_, __) {
 
 }
