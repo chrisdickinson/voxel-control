@@ -159,7 +159,7 @@ proto.tick = function(dt) {
 }
 
 proto.write = function(rotation_deltas) {
-  this.x_rotation_accum += rotation_deltas.dy || 0
+  this.x_rotation_accum -= rotation_deltas.dy || 0
   this.y_rotation_accum -= rotation_deltas.dx || 0
   this.z_rotation_accum += rotation_deltas.dz || 0
 }
