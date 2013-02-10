@@ -153,15 +153,33 @@ proto.tick = function(dt) {
   yaw_target.rotation.y = clamp(yaw_target.rotation.y + clamp(y_rotation, this.y_rotation_per_ms), this.y_rotation_clamp)
   roll_target.rotation.z = clamp(roll_target.rotation.z + clamp(z_rotation, this.z_rotation_per_ms), this.z_rotation_clamp)
 
+  if(this.listeners('data').length) {
+    this.emitUpdate()
+  }
+
   this.x_rotation_accum =
   this.y_rotation_accum =
   this.z_rotation_accum = 0
 }
 
-proto.write = function(rotation_deltas) {
-  this.x_rotation_accum -= rotation_deltas.dy || 0
-  this.y_rotation_accum -= rotation_deltas.dx || 0
-  this.z_rotation_accum += rotation_deltas.dz || 0
+proto.write = function(changes) {
+  this.x_rotation_accum -= changes.dy || 0
+  this.y_rotation_accum -= changes.dx || 0
+  this.z_rotation_accum += changes.dz || 0
+}
+
+proto.emitUpdate = function() {
+  return this.emit('data', {
+      x_rotation_accum: this.x_rotation_accum
+    , y_rotation_accum: this.y_rotation_accum
+    , z_rotation_accum: this.z_rotation_accum
+    , forward: this.state.forward
+    , backward: this.state.backward
+    , left: this.state.left
+    , right: this.state.right
+    , fire: this.state.fire
+    , firealt: this.state.firealt
+  })
 }
 
 proto.end = function(deltas) {
