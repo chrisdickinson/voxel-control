@@ -1,6 +1,6 @@
 {
   "name": "voxel-control",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "manipulate voxel-physical objects in a fps-style fashion",
   "main": "index.js",
   "scripts": {
