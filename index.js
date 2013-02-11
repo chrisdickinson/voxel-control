@@ -42,9 +42,9 @@ function Control(state, opts) {
 
   this.air_control = 'airControl' in opts ? opts.airControl : true
 
-  this.x_rotation_accum =
-  this.y_rotation_accum = 
-  this.z_rotation_accum = 0.0
+  this.state.x_rotation_accum =
+  this.state.y_rotation_accum = 
+  this.state.z_rotation_accum = 0.0
 
   this.accel_max_timer = opts.accelTimer || 200
   this.x_accel_timer = this.accel_max_timer+0
@@ -145,9 +145,9 @@ proto.tick = function(dt) {
     this.firing = 0
   }
 
-  var x_rotation = this.x_rotation_accum * this.rotation_scale
-    , y_rotation = this.y_rotation_accum * this.rotation_scale
-    , z_rotation = this.z_rotation_accum * this.rotation_scale
+  var x_rotation = this.state.x_rotation_accum * this.rotation_scale
+    , y_rotation = this.state.y_rotation_accum * this.rotation_scale
+    , z_rotation = this.state.z_rotation_accum * this.rotation_scale
     , pitch_target = this._pitch_target
     , yaw_target = this._yaw_target
     , roll_target = this._roll_target
@@ -160,35 +160,63 @@ proto.tick = function(dt) {
     this.emitUpdate()
   }
 
-  this.x_rotation_accum =
-  this.y_rotation_accum =
-  this.z_rotation_accum = 0
+  this.state.x_rotation_accum =
+  this.state.y_rotation_accum =
+  this.state.z_rotation_accum = 0
 }
 
 proto.write = function(changes) {
-  this.x_rotation_accum -= changes.dy || 0
-  this.y_rotation_accum -= changes.dx || 0
-  this.z_rotation_accum += changes.dz || 0
-}
-
-proto.emitUpdate = function() {
-  return this.queue({
-      x_rotation_accum: this.x_rotation_accum
-    , y_rotation_accum: this.y_rotation_accum
-    , z_rotation_accum: this.z_rotation_accum
-    , forward: this.state.forward
-    , backward: this.state.backward
-    , left: this.state.left
-    , right: this.state.right
-    , fire: this.state.fire
-    , firealt: this.state.firealt
-  })
+  for(var key in changes) {
+    this.state[key] = changes[key]
+  }
 }
 
 proto.end = function(deltas) {
   if(deltas) {
     this.write(deltas)
   }
+}
+
+proto.createWriteRotationStream = function() {
+  var state = this.state
+    , stream = new Stream
+
+  state.x_rotation_accum =
+  state.y_rotation_accum =
+  state.z_rotation_accum = 0
+
+  stream.writable = true
+  stream.write = write
+  stream.end = end
+
+  return stream
+
+  function write(changes) {
+    state.x_rotation_accum -= changes.dy || 0
+    state.y_rotation_accum -= changes.dx || 0
+    state.z_rotation_accum += changes.dz || 0
+  }
+
+  function end(deltas) {
+    if(deltas) {
+      stream.write(deltas)
+    }
+  }
+}
+
+proto.emitUpdate = function() {
+  return this.queue({
+      x_rotation_accum: this.state.x_rotation_accum
+    , y_rotation_accum: this.state.y_rotation_accum
+    , z_rotation_accum: this.state.z_rotation_accum
+    , forward: this.state.forward
+    , backward: this.state.backward
+    , left: this.state.left
+    , right: this.state.right
+    , fire: this.state.fire
+    , firealt: this.state.firealt
+    , jump: this.state.jump
+  })
 }
 
 proto.drain = function() {
@@ -224,7 +252,7 @@ proto.pause = function() {
 
 proto.queue = function(data) {
   this.buffer.push(data)
-  drain()
+  this.drain()
   return this
 }
 
