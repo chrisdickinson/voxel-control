@@ -52,6 +52,9 @@ function Control(state, opts) {
 
   this.readable =
   this.writable = true
+
+  this.buffer = []
+  this.paused = false
 }
 
 var cons = Control
@@ -169,7 +172,7 @@ proto.write = function(changes) {
 }
 
 proto.emitUpdate = function() {
-  return this.emit('data', {
+  return this.queue({
       x_rotation_accum: this.x_rotation_accum
     , y_rotation_accum: this.y_rotation_accum
     , z_rotation_accum: this.z_rotation_accum
@@ -186,6 +189,43 @@ proto.end = function(deltas) {
   if(deltas) {
     this.write(deltas)
   }
+}
+
+proto.drain = function() {
+  var buf = this.buffer
+    , data
+
+  while(buf.length && !this.paused) {
+    data = buf.shift()
+    if(null === data) {
+      return this.emit('end')
+    }
+    this.emit('data', data)
+  }
+}
+
+proto.resume = function() {
+  this.paused = false
+  this.drain()
+
+  if(!this.paused) {
+    this.emit('drain')
+  }
+  return this
+}
+
+proto.pause = function() {
+  if(this.paused) return
+
+  this.paused = true
+  this.emit('pause')
+  return this
+}
+
+proto.queue = function(data) {
+  this.buffer.push(data)
+  drain()
+  return this
 }
 
 proto.acceleration = function(current, max) {
