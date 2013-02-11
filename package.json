@@ -1,6 +1,6 @@
 {
   "name": "voxel-control",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "manipulate voxel-physical objects in a fps-style fashion",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,5 @@
   ],
   "author": "Chris Dickinson <chris@neversaw.us>",
   "license": "MIT",
-  "readmeFilename": "README.md",
-  "gitHead": "3f4f8cb5997f1d32af15a8d03ea716157c0b5b65"
+  "readmeFilename": "README.md"
 }
