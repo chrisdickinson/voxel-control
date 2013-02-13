@@ -67,7 +67,7 @@ var max = Math.max
   , sin = Math.sin
   , abs = Math.abs
   , floor = Math.floor
-  , π = Math.PI
+  , PI = Math.PI
 
 proto.tick = function(dt) {
   if(!this._target) {
@@ -259,7 +259,7 @@ proto.queue = function(data) {
 proto.acceleration = function(current, max) {
   // max -> 0
   var pct = (max - current) / max
-  return sin(π/2*pct)
+  return sin(PI/2*pct)
 }
 
 proto.target = function(target) {
