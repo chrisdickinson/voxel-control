@@ -8,11 +8,12 @@ when paused.
 ### options
 
 ```javascript
-{ speed: Number(0.08)           // starting speed
-, maxSpeed: Number(0.28)        // max speed
-, jumpMaxSpeed: Number(0.4)     // max jump speed
+// default values are in terms of 1 voxel width
+{ speed: Number(0.0032)           // starting speed
+, maxSpeed: Number(0.0112)        // max speed
+, jumpMaxSpeed: Number(0.016)     // max jump speed
 , jumpMaxTimer: Number(200)     // maximum amount of time jump will be applied in MS
-, jumpSpeed: Number(0.1)        // starting jump speed
+, jumpSpeed: Number(0.004)        // starting jump speed
 , accelTimer: Number(200)       // time to reach full speed on X/Y
 , accelerationCurve: Function() // function(current, max) -> [0-1]
                                 // defaults to a sin curve.
