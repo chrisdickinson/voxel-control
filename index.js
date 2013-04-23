@@ -152,6 +152,9 @@ proto.tick = function(dt) {
     , yaw_target = this._yaw_target
     , roll_target = this._roll_target
 
+  if (pitch_target === yaw_target && yaw_target === roll_target) {
+    pitch_target.eulerOrder = 'YXZ'
+  }
   pitch_target.rotation.x = clamp(pitch_target.rotation.x + clamp(x_rotation, this.x_rotation_per_ms), this.x_rotation_clamp)
   yaw_target.rotation.y = clamp(yaw_target.rotation.y + clamp(y_rotation, this.y_rotation_per_ms), this.y_rotation_clamp)
   roll_target.rotation.z = clamp(roll_target.rotation.z + clamp(z_rotation, this.z_rotation_per_ms), this.z_rotation_clamp)
