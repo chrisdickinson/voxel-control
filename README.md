@@ -14,6 +14,7 @@ when paused.
 , jumpMaxSpeed: Number(0.016)     // max jump speed
 , jumpMaxTimer: Number(200)     // maximum amount of time jump will be applied in MS
 , jumpSpeed: Number(0.004)        // starting jump speed
+, jumpSpeedMove: Number(0.1)        // velocity modifier to use when moving laterally while in the middle of a jump
 , accelTimer: Number(200)       // time to reach full speed on X/Y
 , accelerationCurve: Function() // function(current, max) -> [0-1]
                                 // defaults to a sin curve.
