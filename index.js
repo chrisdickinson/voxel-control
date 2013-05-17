@@ -84,18 +84,18 @@ proto.tick = function(dt) {
     , at_rest = target.atRestY()
 
   if(!this._target) return
-  var moveSpeed = speed
-  if (target.velocity.y !== 0) moveSpeed = moveSpeed * jump_speed_move
+  var move_speed = speed
+  if (target.velocity.y !== 0) move_speed = move_speed * jump_speed_move
 
   if(state.forward || state.backward) {
     this.z_accel_timer = max(0, this.z_accel_timer - dt)
   }
   if(state.backward) {
     if(target.velocity.z < this.max_speed)
-      target.velocity.z = max(min(this.max_speed, moveSpeed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+      target.velocity.z = max(min(this.max_speed, move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
   } else if(state.forward) {
     if(target.velocity.z > -this.max_speed)
-      target.velocity.z = min(max(-this.max_speed, -moveSpeed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+      target.velocity.z = min(max(-this.max_speed, -move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
   } else {
     this.z_accel_timer = this.accel_max_timer
 
@@ -108,10 +108,10 @@ proto.tick = function(dt) {
 
   if(state.right) {
     if(target.velocity.x < this.max_speed)
-      target.velocity.x = max(min(this.max_speed, moveSpeed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+      target.velocity.x = max(min(this.max_speed, move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
   } else if(state.left) {
     if(target.velocity.x > -this.max_speed)
-      target.velocity.x = min(max(-this.max_speed, -moveSpeed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+      target.velocity.x = min(max(-this.max_speed, -move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
   } else {
     this.x_accel_timer = this.accel_max_timer
   }
@@ -123,9 +123,6 @@ proto.tick = function(dt) {
       // we hit our head
       this.jumping = false
     } else {
-      if (!this.jumping) {
-        // on jump start
-      }
       this.jumping = true
       if(this.jump_timer > 0) {
         target.velocity.y = min(target.velocity.y + jump_speed * min(dt, this.jump_timer), this.jump_max_speed)
@@ -158,6 +155,10 @@ proto.tick = function(dt) {
     , pitch_target = this._pitch_target
     , yaw_target = this._yaw_target
     , roll_target = this._roll_target
+    
+  if (pitch_target === yaw_target && yaw_target === roll_target) {
+    pitch_target.eulerOrder = 'YXZ'
+  }
 
   pitch_target.rotation.x = clamp(pitch_target.rotation.x + clamp(x_rotation, this.x_rotation_per_ms), this.x_rotation_clamp)
   yaw_target.rotation.y = clamp(yaw_target.rotation.y + clamp(y_rotation, this.y_rotation_per_ms), this.y_rotation_clamp)
