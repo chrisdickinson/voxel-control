@@ -22,7 +22,7 @@ function Control(state, opts) {
   this.jump_max_timer = opts.jumpTimer || 200
   this.jump_speed = opts.jumpSpeed || 0.004
   this.jump_speed_move = opts.jumpSpeedMove || 0.1
-  this.jump_timer = this.jump_timer_max
+  this.jump_timer = 0
   this.jumping = false
   this.acceleration = opts.accelerationCurve || this.acceleration
 
