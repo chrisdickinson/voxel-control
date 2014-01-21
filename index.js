@@ -19,6 +19,7 @@ function Control(state, opts) {
   this.speed = opts.speed || 0.0032
   this.walk_max_speed = opts.walkMaxSpeed || 0.0056
   this.run_max_speed = opts.runMaxSpeed || 0.0112
+  this.sneak_max_speed = opts.sneakMaxSpeed || 0.0014
   this.jump_max_speed = opts.jumpMaxSpeed || 0.016
   this.jump_max_timer = opts.jumpTimer || 200
   this.jump_speed = opts.jumpSpeed || 0.004
@@ -80,7 +81,7 @@ proto.tick = function(dt) {
     , speed = this.speed
     , jump_speed = this.jump_speed
     , jump_speed_move = this.jump_speed_move
-    , max_speed = this.state.sprint ? this.run_max_speed : this.walk_max_speed
+    , max_speed = this.state.sprint ? this.run_max_speed : (this.state.crouch ? this.sneak_max_speed : this.walk_max_speed)
     , okay_z = abs(target.velocity.z) < max_speed
     , okay_x = abs(target.velocity.x) < max_speed
     , at_rest = target.atRestY()
