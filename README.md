@@ -10,7 +10,8 @@ when paused.
 ```javascript
 // default values are in terms of 1 voxel width
 { speed: Number(0.0032)           // starting speed
-, maxSpeed: Number(0.0112)        // max speed
+, walkMaxSpeed: Number(0.0056)        // max walking speed
+, runkMaxSpeed: Number(0.0112)        // max running speed
 , jumpMaxSpeed: Number(0.016)     // max jump speed
 , jumpMaxTimer: Number(200)     // maximum amount of time jump will be applied in MS
 , jumpSpeed: Number(0.004)        // starting jump speed

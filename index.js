@@ -17,7 +17,9 @@ function Control(state, opts) {
   this._roll_target =
   this._target = null
   this.speed = opts.speed || 0.0032
-  this.max_speed = opts.maxSpeed || 0.0112
+  this.walk_max_speed = opts.walkMaxSpeed || 0.0056
+  this.run_max_speed = opts.runMaxSpeed || 0.0112
+  this.sneak_max_speed = opts.sneakMaxSpeed || 0.0014
   this.jump_max_speed = opts.jumpMaxSpeed || 0.016
   this.jump_max_timer = opts.jumpTimer || 200
   this.jump_speed = opts.jumpSpeed || 0.004
@@ -79,8 +81,9 @@ proto.tick = function(dt) {
     , speed = this.speed
     , jump_speed = this.jump_speed
     , jump_speed_move = this.jump_speed_move
-    , okay_z = abs(target.velocity.z) < this.max_speed
-    , okay_x = abs(target.velocity.x) < this.max_speed
+    , max_speed = this.state.sprint ? this.run_max_speed : (this.state.crouch ? this.sneak_max_speed : this.walk_max_speed)
+    , okay_z = abs(target.velocity.z) < max_speed
+    , okay_x = abs(target.velocity.x) < max_speed
     , at_rest = target.atRestY()
 
   if(!this._target) return
@@ -91,11 +94,11 @@ proto.tick = function(dt) {
     this.z_accel_timer = max(0, this.z_accel_timer - dt)
   }
   if(state.backward) {
-    if(target.velocity.z < this.max_speed)
-      target.velocity.z = max(min(this.max_speed, move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+    if(target.velocity.z < max_speed)
+      target.velocity.z = max(min(max_speed, move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
   } else if(state.forward) {
-    if(target.velocity.z > -this.max_speed)
-      target.velocity.z = min(max(-this.max_speed, -move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+    if(target.velocity.z > -max_speed)
+      target.velocity.z = min(max(-max_speed, -move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
   } else {
     this.z_accel_timer = this.accel_max_timer
 
@@ -107,11 +110,11 @@ proto.tick = function(dt) {
   }
 
   if(state.right) {
-    if(target.velocity.x < this.max_speed)
-      target.velocity.x = max(min(this.max_speed, move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+    if(target.velocity.x < max_speed)
+      target.velocity.x = max(min(max_speed, move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
   } else if(state.left) {
-    if(target.velocity.x > -this.max_speed)
-      target.velocity.x = min(max(-this.max_speed, -move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+    if(target.velocity.x > -max_speed)
+      target.velocity.x = min(max(-max_speed, -move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
   } else {
     this.x_accel_timer = this.accel_max_timer
   }
