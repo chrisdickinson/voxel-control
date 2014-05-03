@@ -9,20 +9,20 @@ when paused.
 
 ```javascript
 // default values are in terms of 1 voxel width
-{ speed: Number(0.0032)           // starting speed
-, walkMaxSpeed: Number(0.0056)        // max walking speed
-, runkMaxSpeed: Number(0.0112)        // max running speed
-, jumpMaxSpeed: Number(0.016)     // max jump speed
-, jumpMaxTimer: Number(200)     // maximum amount of time jump will be applied in MS
-, jumpSpeed: Number(0.004)        // starting jump speed
-, jumpSpeedMove: Number(0.1)        // velocity modifier to use when moving laterally while in the middle of a jump
-, accelTimer: Number(200)       // time to reach full speed on X/Y
-, accelerationCurve: Function() // function(current, max) -> [0-1]
-                                // defaults to a sin curve.
-, airControl: Boolean(true)     // can player control direction without being on the ground?
-, fireRate: Number(0)           // MS between firing
-, discreteFire: Boolean(false)  // does firing require mousedown -> mouseup, or can it be held?
-, onfire: Function()            // function(state) -> undefined
+{ speed: Number(0.0032)                 // starting speed
+, walkMaxSpeed: Number(0.0056)          // max walking speed
+, runMaxSpeed: Number(0.0112)           // max running speed
+, jumpMaxSpeed: Number(0.016)           // max jump speed
+, jumpMaxTimer: Number(200)             // maximum amount of time jump will be applied in MS
+, jumpSpeed: Number(0.004)              // starting jump speed
+, jumpSpeedMove: Number(0.1)            // velocity modifier to use when moving laterally while in the middle of a jump
+, accelTimer: Number(200)               // time to reach full speed on X/Y
+, accelerationCurve: Function()         // function(current, max) -> [0-1]
+                                        // defaults to a sin curve.
+, airControl: Boolean(true)             // can player control direction without being on the ground?
+, fireRate: Number(0)                   // MS between firing
+, discreteFire: Boolean(false)          // does firing require mousedown -> mouseup, or can it be held?
+, onfire: Function()                    // function(state) -> undefined
 , rotationXMax: Number(33)              // maximum x rotation in a tick
 , rotationYMax: Number(33)              // maximum y rotation in a tick
 , rotationZMax: Number(33)              // maximum z rotation in a tick
