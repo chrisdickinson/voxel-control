@@ -82,23 +82,23 @@ proto.tick = function(dt) {
     , jump_speed = this.jump_speed
     , jump_speed_move = this.jump_speed_move
     , max_speed = this.state.sprint ? this.run_max_speed : (this.state.crouch ? this.sneak_max_speed : this.walk_max_speed)
-    , okay_z = abs(target.velocity.z) < max_speed
-    , okay_x = abs(target.velocity.x) < max_speed
+    , okay_z = abs(target.velocity[2]) < max_speed
+    , okay_x = abs(target.velocity[0]) < max_speed
     , at_rest = target.atRestY()
 
   if(!this._target) return
   var move_speed = speed
-  if (target.velocity.y !== 0) move_speed = move_speed * jump_speed_move
+  if (target.velocity[1] !== 0) move_speed = move_speed * jump_speed_move
 
   if(state.forward || state.backward) {
     this.z_accel_timer = max(0, this.z_accel_timer - dt)
   }
   if(state.backward) {
-    if(target.velocity.z < max_speed)
-      target.velocity.z = max(min(max_speed, move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+    if(target.velocity[2] < max_speed)
+      target.velocity[2] = max(min(max_speed, move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity[2])
   } else if(state.forward) {
-    if(target.velocity.z > -max_speed)
-      target.velocity.z = min(max(-max_speed, -move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity.z)
+    if(target.velocity[2] > -max_speed)
+      target.velocity[2] = min(max(-max_speed, -move_speed * dt * this.acceleration(this.z_accel_timer, this.accel_max_timer)), target.velocity[2])
   } else {
     this.z_accel_timer = this.accel_max_timer
 
@@ -110,11 +110,11 @@ proto.tick = function(dt) {
   }
 
   if(state.right) {
-    if(target.velocity.x < max_speed)
-      target.velocity.x = max(min(max_speed, move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+    if(target.velocity[0] < max_speed)
+      target.velocity[0] = max(min(max_speed, move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity[0])
   } else if(state.left) {
-    if(target.velocity.x > -max_speed)
-      target.velocity.x = min(max(-max_speed, -move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity.x)
+    if(target.velocity[0] > -max_speed)
+      target.velocity[0] = min(max(-max_speed, -move_speed * dt * this.acceleration(this.x_accel_timer, this.accel_max_timer)), target.velocity[0])
   } else {
     this.x_accel_timer = this.accel_max_timer
   }
@@ -128,7 +128,7 @@ proto.tick = function(dt) {
     } else {
       this.jumping = true
       if(this.jump_timer > 0) {
-        target.velocity.y = min(target.velocity.y + jump_speed * min(dt, this.jump_timer), this.jump_max_speed)
+        target.velocity[1] = min(target.velocity[1] + jump_speed * min(dt, this.jump_timer), this.jump_max_speed)
       }
       this.jump_timer = max(this.jump_timer - dt, 0)
     }
